@@ -3,7 +3,7 @@ namespace Fshangala\Auth2Ation;
 use Fshangala\Auth2Ation\Models\Authentication as AuthenticationModel;
 use App\Models\User;
 
-class Authentication
+class FAuthentication
 {
     public function authenticate($request){
         if ($request->header('Authorization')){
