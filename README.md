@@ -1,7 +1,10 @@
-- Your user model should include `email` and `password` fields.
+
 - add lumen's withFacades
 - add lumen's withEloquent
-- register lumen's AuthServiceProvider
+- register the following service providers
+```
+$app->register(Fshangala\Auth2Ation\Auth2AtionServiceProvider::class);
+$app->register(Fshangala\Auth2Ation\Auth\FAuthServiceProvider::class);
+```
 - add lumen's auth middlware
-- register Fshangala\Auth2Ation\Auth2AtionServiceProvider
 - run migrations

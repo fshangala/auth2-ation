@@ -18,6 +18,8 @@ class CreateAuthenticationsTable extends Migration
             $table->unsignedInteger("user_id");
             $table->string("token");
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
