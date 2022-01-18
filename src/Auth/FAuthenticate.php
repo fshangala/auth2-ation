@@ -1,6 +1,6 @@
 <?php
-namespace Fshangala\Auth2Ation;
-use Fshangala\Auth2Ation\Models\Authentication as AuthenticationModel;
+namespace Fshangala\Auth2Ation\Auth;
+use Fshangala\Auth2Ation\Models\Authentication;
 use App\Models\User;
 
 class FAuthentication
@@ -8,7 +8,7 @@ class FAuthentication
     public function authenticate($request){
         if ($request->header('Authorization')){
             $token = $request->header('Authorization');
-            $authentication = AuthenticationModel::where('token',$token)->first();
+            $authentication = Authentication::where('token',$token)->first();
             if($authentication){
                 $user = User::find($authentication->user_id);
                 return $user;
