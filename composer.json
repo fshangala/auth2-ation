@@ -1,0 +1,19 @@
+{
+    "name": "fshangala/auth2-ation",
+    "description": "Authentication and authorization system for laravel and lumen",
+    "type": "project",
+    "license": "AGPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Fshangala\\Auth2Ation\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Funduluka Shangala",
+            "email": "fshangala@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
