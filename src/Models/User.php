@@ -21,6 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'username',
         'email',
         'password',
+        'is_superuser'
     ];
 
     /**

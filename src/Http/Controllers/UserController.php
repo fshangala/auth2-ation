@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 use Fshangala\Auth2Ation\Models\User;
 use Fshangala\Auth2Ation\Models\Authentication;
@@ -15,8 +16,20 @@ class UserController extends Controller
     {
         $this->middleware("auth", ["except"=>[
             "register",
-            "login"
+            "login",
+            "createSuperUser"
         ]]);
+    }
+
+    public function getUser(Request $request, $username)
+    {
+        $res = null;
+        $statusCode = 500;
+
+        $res = User::where('username',$username)->firstOrFail();
+        Gate::authorize('permission',[['action'=>'read','resource'=>'users','target'=>$res->id]]);
+        $statusCode = 200;
+        return response($res,$statusCode);
     }
 
     public function user(Request $request)
@@ -32,6 +45,7 @@ class UserController extends Controller
 
     public function all(Request $request)
     {
+        Gate::authorize('permission',[['action'=>'create','resource'=>'users']]);
         $res = null;
         $statusCode = 500;
 
@@ -52,10 +66,7 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required',
          ];
- 
-        $customMessages = [
-             'required' => 'Please fill attribute :attribute'
-        ];
+
         $this->validate($request, $rules);
  
         try {
@@ -67,7 +78,43 @@ class UserController extends Controller
             $save = User::create([
                 'username'=> $username,
                 'email'=> $email,
-                'password'=> $password
+                'password'=> $password,
+                'is_superuser'=> false
+            ]);
+            
+            $res = $save;
+            $statusCode = 200;
+        } catch (\Illuminate\Database\QueryException $ex) {
+            $res = $ex->getMessage();
+        }
+
+        return response($res, $statusCode);
+    }
+
+    public function createSuperUser(Request $request)
+    {
+        Gate::authorize('create-superuser');
+        $res = null;
+        $statusCode = 500;
+
+        $rules = [
+            'username' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+         ];
+        $this->validate($request, $rules);
+ 
+        try {
+            $hasher = app()->make('hash');
+            $username = $request->input('username');
+            $email = $request->input('email');
+            $password = $hasher->make($request->input('password'));
+ 
+            $save = User::create([
+                'username'=> $username,
+                'email'=> $email,
+                'password'=> $password,
+                'is_superuser'=> true
             ]);
             
             $res = $save;

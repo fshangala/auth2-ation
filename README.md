@@ -16,6 +16,26 @@ $app->routeMiddleware([
 ]);
 ```
 - run migrations
+- add the following line to use the Gate for permissions
+```
+use Illuminate\Support\Facades\Gate;
+```
+- Check for permission like this
+```
+Gate::authorize('permission',[['action'=>'create','resource'=>'permissions']]);
+```
+or
+```
+Gate::authorize('permission',[['action'=>'read','resource'=>'users','target'=>$res->id]]);
+```
+or
+```
+Gate::authorize('permission',[['action'=>'read','resource'=>'users','type'=>'student']]);
+```
+If not granted the request aborts with a 403 Forbiden response
+- Known resources
+1. permissions
+2. users
 
 ### Helpful status codes
 ```

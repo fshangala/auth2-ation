@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuthenticationsTable extends Migration
+class CreateAppsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateAuthenticationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('authentications', function (Blueprint $table) {
+        Schema::create('apps', function (Blueprint $table) {
             $table->increments("id");
-            $table->unsignedInteger("user_id");
-            $table->string("token");
+            $table->string("app_key")->unique();
+            $table->string("app_secrete");
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateAuthenticationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authentications');
+        Schema::dropIfExists('apps');
     }
 }
