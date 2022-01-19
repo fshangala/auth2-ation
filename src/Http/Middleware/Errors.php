@@ -10,9 +10,14 @@ class Errors
     {
         $response = $next($request);
         
-        $res['success'] = false;
+        $statusCode = $response->getStatusCode();
+        if($statusCode != 200){
+            $res['success'] = false;
+        } else {
+            $res['success'] = true;
+        }
         $res['message'] = $response->statusText();
         $res["data"] = $response->getOriginalContent();
-        return response()->json($res,$response->getStatusCode());
+        return response()->json($res,$statusCode);
     }
 }

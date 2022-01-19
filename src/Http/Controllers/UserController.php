@@ -32,12 +32,11 @@ class UserController extends Controller
 
     public function all(Request $request)
     {
-        $res = ["success"=>false, "message"=>"", "data"=>null];
+        $res = null;
         $statusCode = 500;
 
         $users = User::all();
-        $res["success"]=true;
-        $res["data"]=$users;
+        $res=$users;
         $statusCode=200;
 
         return response($res, $statusCode);
@@ -45,12 +44,11 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        $res = ["success"=>false, "message"=>"", "data"=>null];
+        $res = null;
         $statusCode = 500;
 
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'username' => 'required',
             'email' => 'required',
             'password' => 'required',
          ];
@@ -62,25 +60,20 @@ class UserController extends Controller
  
         try {
             $hasher = app()->make('hash');
-            $first_name = $request->input('first_name');
-            $last_name = $request->input('last_name');
+            $username = $request->input('username');
             $email = $request->input('email');
             $password = $hasher->make($request->input('password'));
  
             $save = User::create([
-                'first_name'=> $first_name,
-                'last_name'=> $last_name,
+                'username'=> $username,
                 'email'=> $email,
                 'password'=> $password
             ]);
-
-            $res['success'] = true;
-            $res['message'] = 'Registration success!';
-            $res['data'] = $save;
+            
+            $res = $save;
             $statusCode = 200;
         } catch (\Illuminate\Database\QueryException $ex) {
-            $res['success'] = false;
-            $res['message'] = $ex->getMessage();
+            $res = $ex->getMessage();
         }
 
         return response($res, $statusCode);
@@ -88,21 +81,18 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $res = ["success"=>false, "message"=>"", "data"=>null];
+        $res = null;
         $statusCode = 500;
          
         $rules = [
             'email' => 'required',
             'password' => 'required'
         ];
-        $customMessages = [
-           'required' => ':attribute tidak boleh kosong'
-        ];
-        $this->validate($request, $rules, $customMessages);
+        $this->validate($request, $rules);
 
         $email = $request->input('email');
         try {
-            $login = User::where('email', $email)->first();
+            $login = User::where('email', $email)->firstOrFail();
             if ($login) {
                 if ($login->count() > 0) {
                     if (Hash::check($request->input('password'), $login->password)) {
@@ -112,33 +102,24 @@ class UserController extends Controller
                                 "user_id"=>$login->id,
                                 "token"=>$api_token
                             ]);
-                            $res['success'] = true;
-                            $res['message'] = "Success.";
-                            $res['data'] = $authorization;
+                            $res = $authorization;
                             $statusCode = 200; 
  
                         } catch (\Illuminate\Database\QueryException $ex) {
-                            $res['success'] = false;
-                            $res['message'] = $ex->getMessage();
+                            
+                            $res = $ex->getMessage();
                         }
                     } else {
-                        $res['success'] = false;
-                        $res['message'] = 'email and password combination dont match any account in the system';
                         $statusCode = 401;
                     }
                 } else {
-                    $res['success'] = false;
-                    $res['message'] = 'email and password combination dont match any account in the system';
                     $statusCode = 401;
                 }
             } else {
-                $res['success'] = false;
-                $res['message'] = 'email and password combination dont match any account in the system';
                 $statusCode = 401;
             }
         } catch (\Illuminate\Database\QueryException $ex) {
-            $res['success'] = false;
-            $res['message'] = $ex->getMessage();
+            $res = $ex->getMessage();
             $statusCode = 500;
         }
 
