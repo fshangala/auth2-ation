@@ -2,7 +2,6 @@
 namespace Fshangala\Auth2Ation;
 
 use Illuminate\Support\ServiceProvider;
-use Fshangala\Auth2Ation\Http\Middleware\Authenticate as AuthenticateMiddleware;
 
 class Auth2AtionServiceProvider extends ServiceProvider
 {

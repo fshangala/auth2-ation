@@ -33,6 +33,11 @@ or
 Gate::authorize('permission',[['action'=>'read','resource'=>'users','type'=>'student']]);
 ```
 If not granted the request aborts with a 403 Forbiden response
+- Primitive actions
+1. create
+2. read
+3. update
+4. delete
 - Known resources
 1. permissions
 2. users
