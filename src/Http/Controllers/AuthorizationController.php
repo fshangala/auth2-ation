@@ -20,10 +20,10 @@ class AuthorizationController extends Controller
         $res = null;
 
         $validData = $this->validate($request, [
-            'user_id'=>'required',
+            'user_id'=>'required|exists:permissions',
             'action'=>'required',
             'resource'=>'required',
-            'grant'=>'required'
+            'grant'=>'required|boolean'
         ]);
 
         $res = Authorization::create($validData);
