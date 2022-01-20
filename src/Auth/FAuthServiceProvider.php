@@ -30,22 +30,28 @@ class FAuthServiceProvider extends ServiceProvider
             }
             $permission = Authorization::where('user_id',$user->id)->where('action',$fields['action'])->where('resource',$fields['resource']);
             if(array_key_exists('target',$fields)){
-                $targetCheck = $permission->where('target',$fields['target'])->first();
+                $permission1 = clone $permission;
+                $targetCheck = $permission1->where('target',$fields['target'])->firstOr(function(){
+                    return false;
+                });
                 if($targetCheck){
                     if($targetCheck->grant){
                         return Response::allow();
                     } else {
-                        return Response::deny('Not enough privilages!');
+                        return Response::deny('Not enough privilages!1');
                     }
                 }
             }
             if (array_key_exists('type',$fields)){
-                $typeCheck = $permission->where('type',$fields['type'])->first();
+                $permission2 = clone $permission;
+                $typeCheck = $permission2->where('type',$fields['type'])->firstOr(function(){
+                    return false;
+                });
                 if($typeCheck){
                     if($typeCheck->grant){
                         return Response::allow();
                     } else {
-                        return Response::deny('Not enough privilages!');
+                        return Response::deny('Not enough privilages!2');
                     }
                 }
             }
@@ -55,10 +61,10 @@ class FAuthServiceProvider extends ServiceProvider
                 if($resource->grant){
                     return Response::allow();
                 } else {
-                    return Response::deny('Not enough privilages!');
+                    return Response::deny('Not enough privilages!3');
                 }
             } else {
-                return Response::deny('Not enough privilages!');
+                return Response::deny('Not enough privilages!4'.json_encode($resource));
             }
         });
         $this->app['auth']->viaRequest('api',function($request){

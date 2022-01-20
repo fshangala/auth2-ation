@@ -20,7 +20,7 @@ class AuthorizationController extends Controller
         $res = null;
 
         $validData = $this->validate($request, [
-            'user_id'=>'required|exists:permissions',
+            'user_id'=>'required|exists:users,id',
             'action'=>'required',
             'resource'=>'required',
             'grant'=>'required|boolean'
@@ -42,11 +42,17 @@ class AuthorizationController extends Controller
     {
         Gate::authorize('permission',[['action'=>'delete','resource'=>'permissions']]);
         $res = null;
-        $validData = $this->validate($request, ['permission_id'=>'required']);
+        $validData = $this->validate($request, ['permission_id'=>'required|exists:authorizations,id']);
 
         $entry = Authorization::findOrFail($validData['permission_id']);
         $entry->delete();
 
         return response($entry,200);
+    }
+
+    public function test()
+    {
+        $permission = Authorization::where('user_id',1)->where('action','read')->where('resource','schools')->first();
+        return response($permission);
     }
 }
