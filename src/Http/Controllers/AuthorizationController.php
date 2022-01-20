@@ -31,6 +31,13 @@ class AuthorizationController extends Controller
         return response($res, 200);
     }
 
+    public function all()
+    {
+        Gate::authorize('permission',[['action'=>'read','resource'=>'permissions']]);
+        $res = Authorization::all();
+        return response($res);
+    }
+
     public function deletePermission(Request $request)
     {
         Gate::authorize('permission',[['action'=>'delete','resource'=>'permissions']]);

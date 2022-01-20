@@ -11,6 +11,7 @@ Route::group([
         $router->post('/login','UserController@login');
         $router->post('/add-permission','AuthorizationController@addPermission');
         $router->delete('/delete-permission','AuthorizationController@deletePermission');
+        $router->get('/all-permissions','AuthorizationController@all');
         $router->group(['prefix'=>'/user'],function($router){
             $router->get('/','UserController@user');
             $router->get('/all','UserController@all');

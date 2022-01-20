@@ -45,7 +45,7 @@ class UserController extends Controller
 
     public function all(Request $request)
     {
-        Gate::authorize('permission',[['action'=>'create','resource'=>'users']]);
+        Gate::authorize('permission',[['action'=>'read','resource'=>'users']]);
         $res = null;
         $statusCode = 500;
 
