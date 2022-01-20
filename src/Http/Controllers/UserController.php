@@ -62,9 +62,9 @@ class UserController extends Controller
         $statusCode = 500;
 
         $rules = [
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed',
          ];
 
         $this->validate($request, $rules);
@@ -98,9 +98,9 @@ class UserController extends Controller
         $statusCode = 500;
 
         $rules = [
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed',
          ];
         $this->validate($request, $rules);
  
@@ -132,7 +132,7 @@ class UserController extends Controller
         $statusCode = 500;
          
         $rules = [
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required'
         ];
         $this->validate($request, $rules);
