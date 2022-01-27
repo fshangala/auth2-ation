@@ -18,6 +18,6 @@ class Errors
         }
         $res['message'] = $response->statusText();
         $res["data"] = $response->getOriginalContent();
-        return response()->json($res,$statusCode);
+        return response()->json($res,$statusCode)->header('Access-Control-Allow-Origin','*');
     }
 }
