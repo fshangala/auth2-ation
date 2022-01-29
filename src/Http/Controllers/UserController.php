@@ -138,36 +138,17 @@ class UserController extends Controller
         $this->validate($request, $rules);
 
         $email = $request->input('email');
-        try {
-            $login = User::where('email', $email)->firstOrFail();
-            if ($login) {
-                if ($login->count() > 0) {
-                    if (Hash::check($request->input('password'), $login->password)) {
-                        try {
-                            $api_token = sha1($login->id.time());
-                            $authorization = Authentication::create([
-                                "user_id"=>$login->id,
-                                "token"=>$api_token
-                            ]);
-                            $res = $authorization;
-                            $statusCode = 200; 
- 
-                        } catch (\Illuminate\Database\QueryException $ex) {
-                            
-                            $res = $ex->getMessage();
-                        }
-                    } else {
-                        $statusCode = 401;
-                    }
-                } else {
-                    $statusCode = 401;
-                }
-            } else {
-                $statusCode = 401;
-            }
-        } catch (\Illuminate\Database\QueryException $ex) {
-            $res = $ex->getMessage();
-            $statusCode = 500;
+        $login = User::where('email', $email)->firstOrFail();
+        if (Hash::check($request->input('password'), $login->password)) {
+            $api_token = sha1($login->id.time());
+            $authorization = Authentication::create([
+                "user_id"=>$login->id,
+                "token"=>$api_token
+            ]);
+            $res = $authorization;
+            $statusCode = 200; 
+        } else {
+            $statusCode = 417;
         }
 
         return response($res, $statusCode);
