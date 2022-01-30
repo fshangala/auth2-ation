@@ -1,7 +1,7 @@
 {
     "name": "fshangala/auth2-ation",
     "description": "Authentication and authorization system for laravel and lumen",
-    "type": "project",
+    "type": "library",
     "license": "AGPL-3.0-or-later",
     "autoload": {
         "psr-4": {
